@@ -1,5 +1,11 @@
 import processes as proc
 import molecules as mol
+#import sample
+
+
+sample_seq = unicode("AUGGUACCGGGAUUUCGCGGGAUUGUACAAAAAUACGUUUUGUACAUGUUGUGCUGUUACCACUGCAAAUACACUUGGUUUCAAACACUUCCAUAG")
+
+#print len(sample_seq)
 
 class Model(object):
     """
@@ -11,7 +17,9 @@ class Model(object):
 
         # initiate states
         self.ribosomes = {'Ribosomes': mol.Ribosome('Ribosomes', 'Ribosomes', 1)}
-        mrna_list = ["AUGGUACGUAGCUAA", "AUGGUACGUUUUUAA", "AUGUUUCGUAGCUAA"]
+        mrna_list = ["AUGGUACGUUUCUAG", "AUGGUACGUUUUUAG", "AUGUUUCGUUUCUAG", sample_seq]
+        #mrna_list = [sample_seq]
+        print len(mrna_list)
         self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), mrna_list[i]) for i in xrange(len(mrna_list))}
 
         self.states.update(self.ribosomes)
