@@ -7,7 +7,7 @@ class Process(object):
     """
     Parent for all cellular processes.
     """
-    def __init__(self, id, name): #Konstruktor
+    def __init__(self, id, name): # Konstruktor
         self.id = id
         self.name = name
 
@@ -60,7 +60,7 @@ class Translation(Process):
         # declare attributes
         self.__ribsomes = []
 
-    def update(self, model): # von model, saemtliche modelobjekte
+    def update(self, model): # von model saemtliche modelobjekte 
         """
         Update all mrnas and translate proteins.
         """
@@ -72,7 +72,7 @@ class Translation(Process):
                 self.initiate(mrna)
             else:
                 prot = self.elongate(mrna)
-            if isinstance(prot, molecules.Protein): # Typabfrage
+            if isinstance(prot, molecules.Protein): #Typabfrage
                 if prot.id in model.states:
                     model.states[prot.id].append(prot)
                 else:
@@ -125,7 +125,7 @@ class Translation(Process):
         """
 
         protein = mrna.binding[i]  # bound mRNA
-        mrna.binding[i] = 0 #ungebunden
+        mrna.binding[i] = 0 # ungebunden
         self.__ribosomes.count += 1
         return protein
 
