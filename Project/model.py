@@ -11,8 +11,6 @@ class Model(object):
 
         # initiate states
         self.ribosomes = {'Ribosomes': mol.Ribosome('Ribosomes', 'Ribosomes', 1)}
-        #self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), "AUGUUUUUUUAA") for i in xrange(50)}
-
         mrna_list = ["AUGGUACGUAGCUAA", "AUGGUACGUUUUUAA", "AUGUUUCGUAGCUAA"]
         self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), mrna_list[i]) for i in xrange(len(mrna_list))}
 

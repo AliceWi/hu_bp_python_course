@@ -62,8 +62,6 @@ class Translation(Process):
         """
         Update all mrnas and translate proteins.
         """
-        #print "Hallo!!!"
-        #print mrna.binding
 
         self.__ribosomes = model.states[self.enzyme_ids[0]]
         for mrna_id in self.substrate_ids:
@@ -86,8 +84,6 @@ class Translation(Process):
         @type mrna: MRNA
         """
 
-        #print mrna.binding
-
         if not mrna.binding[0]:  #  no mrna bound yet and target mrna still free at pos 0
             # bind a nascent protein to the 0 codon
             if npr.poisson(self.__ribosomes.count) > 1: # at least one binding event happens in time step
@@ -108,9 +104,6 @@ class Translation(Process):
         """
 
         # TODO: this needs to update in a random order
-
-        #print i
-        #print mrna.binding
 
         for i, ribosome in enumerate(mrna.binding):
             if isinstance(ribosome, molecules.Protein):
