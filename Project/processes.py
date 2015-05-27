@@ -19,7 +19,7 @@ class Process(object):
         self.enzyme_ids = enzyme_ids
         self.substrate_ids = substrate_ids
 
-    def update(self, model):
+    def update(self, model): #hier ist ein sinnloser Kommentar
         """
         Has to be implemented by child class.
         """
@@ -62,6 +62,9 @@ class Translation(Process):
         """
         Update all mrnas and translate proteins.
         """
+        #print "Hallo!!!"
+        #print mrna.binding
+
         self.__ribosomes = model.states[self.enzyme_ids[0]]
         for mrna_id in self.substrate_ids:
             prot = None
@@ -82,12 +85,15 @@ class Translation(Process):
 
         @type mrna: MRNA
         """
+
+        #print mrna.binding
+
         if not mrna.binding[0]:  #  no mrna bound yet and target mrna still free at pos 0
             # bind a nascent protein to the 0 codon
             if npr.poisson(self.__ribosomes.count) > 1: # at least one binding event happens in time step
                 # if a ribosome binds the position a new Protein is created and stored on the
                 # position as if it were bound to the ribosome
-                mrna.binding[0] =  molecules.Protein("Protein_{0}".format(mrna.id),
+                mrna.binding[0] = molecules.Protein("Protein_{0}".format(mrna.id),
                                                      "Protein_{0}".format(mrna.id),
                                                      self.code[mrna[0:3]])
                 self.__ribosomes.count -= 1
@@ -102,12 +108,18 @@ class Translation(Process):
         """
 
         # TODO: this needs to update in a random order
+
+        #print i
+        #print mrna.binding
+
         for i, ribosome in enumerate(mrna.binding):
             if isinstance(ribosome, molecules.Protein):
                 codon = mrna[i*3:i*3+3]
                 aa = self.code[codon]
                 if aa == "*":  # terminate at stop codon
                     return self.terminate(mrna, i)
+
+                
 
                 if not mrna.binding[i + 1]:  # if the next rna position is free
                     mrna.binding[i] + aa
@@ -125,15 +137,5 @@ class Translation(Process):
         protein = mrna.binding[i]  # bound mRNA
         mrna.binding[i] = 0
         self.__ribosomes.count += 1
+        print protein.sequence
         return protein
-
-
-class Transcription(Process):
-    """
-    Implements mRNA transcription from genes on the chromosome.
-    """
-
-    def __init__(self, id, name):
-        super(Transcription, self).__init__(id, name)
-
-    # TODO: implement transcription

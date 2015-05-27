@@ -10,8 +10,12 @@ class Model(object):
         self.processes = {}
 
         # initiate states
-        self.ribosomes = {'Ribosomes': mol.Ribosome('Ribosomes', 'Ribosomes', 10)}
-        self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), "UUUUUUUUUUAA") for i in xrange(50)}
+        self.ribosomes = {'Ribosomes': mol.Ribosome('Ribosomes', 'Ribosomes', 1)}
+        #self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), "AUGUUUUUUUAA") for i in xrange(50)}
+
+        mrna_list = ["AUGGUACGUAGCUAA", "AUGGUACGUUUUUAA", "AUGUUUCGUAGCUAA"]
+        self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), mrna_list[i]) for i in xrange(len(mrna_list))}
+
         self.states.update(self.ribosomes)
         self.states.update(self.mrnas)
 
@@ -25,6 +29,7 @@ class Model(object):
         Do one update step for each process.
 
         """
+
         for p in self.processes:
             self.processes[p].update(self)
 
@@ -35,10 +40,11 @@ class Model(object):
         """
         for s in xrange(steps):
             self.step()
-            if log: # This could be an entry point for further logging
-                # print count of each protein to the screen
-                print '\r{}'.format([len(self.states[x]) for x in self.states.keys() if "Protein_" in x]),
+        #     if log:     # This could be an entry point for further logging
+        #                 # print count of each protein to the screen
+        #         print '\r{}'.format([len(self.states[x]) for x in self.states.keys() if "Protein_" in x]),
             
 if __name__ == "__main__":
     c = Model()
+    #c.simulate(100, log=True)
     c.simulate(100, log=True)
