@@ -19,7 +19,7 @@ class Process(object):
         self.enzyme_ids = enzyme_ids
         self.substrate_ids = substrate_ids
 
-    def update(self, model): #hier ist ein sinnloser Kommentar
+    def update(self, model):
         """
         Has to be implemented by child class.
         """
@@ -29,11 +29,9 @@ class Process(object):
 class Translation(Process):
     """
     Translation is instantiated in the Cell to produce proteins.
-
     Defines Translation process. It iterates over all ribosomes and decides what
     they should do. They either bind to mRNA or elongate/terminate a protein if
     they are already bound.
-
     """
     code = dict([('UCA', 'S'), ('UCG', 'S'), ('UCC', 'S'), ('UCU', 'S'),
                  ('UUU', 'F'), ('UUC', 'F'), ('UUA', 'L'), ('UUG', 'L'),
@@ -80,7 +78,6 @@ class Translation(Process):
     def initiate(self, mrna):
         """
         Try to bind to a given MRNA. Binding probability corresponds to the ribosome count.
-
         @type mrna: MRNA
         """
 
@@ -99,11 +96,8 @@ class Translation(Process):
         Elongate the new protein by the correct amino acid. Check if an
         MRNA is bound and if ribosome can move to next codon.
         Terminate if the ribosome reaches a STOP codon.
-
         @type return: Protein or False
         """
-
-        # TODO: this needs to update in a random order
 
         for i, ribosome in enumerate(mrna.binding):
             if isinstance(ribosome, molecules.Protein):
@@ -111,8 +105,6 @@ class Translation(Process):
                 aa = self.code[codon]
                 if aa == "*":  # terminate at stop codon
                     return self.terminate(mrna, i)
-
-                
 
                 if not mrna.binding[i + 1]:  # if the next rna position is free
                     mrna.binding[i] + aa
@@ -123,7 +115,6 @@ class Translation(Process):
     def terminate(self, mrna, i):
         """
         Splits the ribosome/MRNA complex and returns a protein.
-
         @type mrna: MRNA
         """
 
