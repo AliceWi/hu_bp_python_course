@@ -68,19 +68,29 @@ class Translation(Process):
         for mrna_id in self.substrate_ids:
             prot = None
             mrna = model.states[mrna_id]
+<<<<<<< HEAD
 
             prot = self.elongate(mrna)
+=======
+            if not mrna.binding[0]: # wenns 0 ist, Abfrage richtig, geht rein
+                self.initiate(mrna)
+            else:
+                prot = self.elongate(mrna)
+>>>>>>> 78e177808159f55a1f0c4c2dec7b239af38fcfac
             if isinstance(prot, molecules.Protein): # Typabfrage
                 if prot.id in model.states:
                     model.states[prot.id].append(prot)
                 else:
                     model.states[prot.id] = [prot]
 
+<<<<<<< HEAD
 
             if not mrna.binding[0]: # wenns 0 ist, Abfrage richtig, geht rein
                 self.initiate(mrna)
             #else:
             
+=======
+>>>>>>> 78e177808159f55a1f0c4c2dec7b239af38fcfac
     def initiate(self, mrna):
         """
         Try to bind to a given MRNA. Binding probability corresponds to the ribosome count.
@@ -107,6 +117,7 @@ class Translation(Process):
         @type return: Protein or False
         """
 
+<<<<<<< HEAD
         perm_list = npr.permutation(range(len(mrna.binding)))
         for i in perm_list:
             bound_at_i = mrna.binding[i]
@@ -127,16 +138,51 @@ class Translation(Process):
         # TODO: this needs to update in a random order
        
 
+=======
+        # TODO: this needs to update in a random order
+
+        for i, ribosome in enumerate(mrna.binding):
+            try:
+                if 'AUG' in mrna:
+
+                    j = mrna.index('AUG')
+                    while (j < j + 16):
+                        if isinstance(ribosome, molecules.Protein):
+                            codon = mrna[3*i:3*i+3]
+                            aa = self.code[codon]
+                            if not aa == "M":
+                                j += 1
+                                continue 
+                            else: 
+                                if aa == "*":  # terminate at stop codon
+                                    return self.terminate(mrna, i)
+                        j += 1
+
+            except:
+                print "Wrong length of mRNA."    
+
+                if not mrna.binding[i + 1]:  # if the next rna position is free
+                    mrna.binding[i] + aa # setze auf diese Stelle aa
+                    mrna.binding[i + 1] = mrna.binding[i] # die naechste Stelle wird die betrachtete
+                    mrna.binding[i] = 0 # und die betrachtete Stelle ist 0
+        return 0
+
+>>>>>>> 78e177808159f55a1f0c4c2dec7b239af38fcfac
     def terminate(self, mrna, i):
         """
         Splits the ribosome/MRNA complex and returns a protein.
 
         @type mrna: MRNA
         """
+<<<<<<< HEAD
+=======
+
+>>>>>>> 78e177808159f55a1f0c4c2dec7b239af38fcfac
         protein = mrna.binding[i]  # bound mRNA
         mrna.binding[i] = 0 #ungebunden
         self.__ribosomes.count += 1
         print protein.sequence
+<<<<<<< HEAD
         print self.energy(protein.sequence)
         return protein
     
@@ -147,3 +193,6 @@ class Translation(Process):
         return (atp, gtp)
 
     
+=======
+        return protein
+>>>>>>> 78e177808159f55a1f0c4c2dec7b239af38fcfac
