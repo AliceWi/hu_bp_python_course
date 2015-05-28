@@ -1,11 +1,7 @@
 import processes as proc
 import molecules as mol
-#import sample
-
 
 sample_seq = unicode("AUGGUACCGGGAUUUCGCGGGAUUGUACAAAAAUACGUUUUGUACAUGUUGUGCUGUUACCACUGCAAAUACACUUGGUUUCAAACACUUCCAUAG")
-
-#print len(sample_seq)
 
 class Model(object):
     """
@@ -33,7 +29,6 @@ class Model(object):
     def step(self):
         """
         Do one update step for each process.
-
         """
 
         for p in self.processes:
@@ -42,15 +37,10 @@ class Model(object):
     def simulate(self, steps, log=True):
         """
         Simulate the model for some time.
-
         """
         for s in xrange(steps):
             self.step()
-        #     if log:     # This could be an entry point for further logging
-        #                 # print count of each protein to the screen
-        #         print '\r{}'.format([len(self.states[x]) for x in self.states.keys() if "Protein_" in x]),
-            
+    
 if __name__ == "__main__":
     c = Model()
-    #c.simulate(100, log=True)
     c.simulate(100, log=True)
