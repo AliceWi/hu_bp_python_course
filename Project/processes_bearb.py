@@ -7,31 +7,35 @@ class Process(object):
     """
     Parent for all cellular processes.
     """
-    def __init__(self, id, name):
+    def __init__(self, id, name): #Konstruktor
         self.id = id
         self.name = name
 
 
-        self.enzyme_ids = []
+        self.enzyme_ids = [] 
         self.substrate_ids = []
 
-    def set_states(self, substrate_ids, enzyme_ids):
-        self.enzyme_ids = enzyme_ids
+    def set_states(self, substrate_ids, enzyme_ids): # mRNA, Ribosom
+        self.enzyme_ids = enzyme_ids # auch leere Liste
         self.substrate_ids = substrate_ids
 
-    def update(self, model):
+    def update(self, model): #hier ist ein sinnloser Kommentar
         """
         Has to be implemented by child class.
         """
-        pass
+        pass # = mach nichts
+        #Defaultfunktion
+        #weil andere Klassen auch die FUnk miterben
 
 
 class Translation(Process):
     """
     Translation is instantiated in the Cell to produce proteins.
+
     Defines Translation process. It iterates over all ribosomes and decides what
     they should do. They either bind to mRNA or elongate/terminate a protein if
     they are already bound.
+
     """
     code = dict([('UCA', 'S'), ('UCG', 'S'), ('UCC', 'S'), ('UCU', 'S'),
                  ('UUU', 'F'), ('UUC', 'F'), ('UUA', 'L'), ('UUG', 'L'),
@@ -51,33 +55,36 @@ class Translation(Process):
                  ('GGA', 'G'), ('GGG', 'G'), ('GGC', 'G'), ('GGU', 'G')])
 
     def __init__(self, id, name):
-        super(Translation, self).__init__(id, name)
+        super(Translation, self).__init__(id, name) # ohne super keine Attribute, aber Funktionen 
 
         # declare attributes
         self.__ribsomes = []
 
-    def update(self, model):
+    def update(self, model): # von model, saemtliche modelobjekte
         """
         Update all mrnas and translate proteins.
         """
-
-        self.__ribosomes = model.states[self.enzyme_ids[0]]
+        self.__ribosomes = model.states[self.enzyme_ids[0]] # gibt Ribosomobjekt von enzyme aus model 
         for mrna_id in self.substrate_ids:
             prot = None
             mrna = model.states[mrna_id]
-            if not mrna.binding[0]:
-                self.initiate(mrna)
-            else:
-                prot = self.elongate(mrna)
-            if isinstance(prot, molecules.Protein):
+
+            prot = self.elongate(mrna)
+            if isinstance(prot, molecules.Protein): # Typabfrage
                 if prot.id in model.states:
                     model.states[prot.id].append(prot)
                 else:
                     model.states[prot.id] = [prot]
 
+
+            if not mrna.binding[0]: # wenns 0 ist, Abfrage richtig, geht rein
+                self.initiate(mrna)
+            #else:
+            
     def initiate(self, mrna):
         """
         Try to bind to a given MRNA. Binding probability corresponds to the ribosome count.
+
         @type mrna: MRNA
         """
 
@@ -96,11 +103,15 @@ class Translation(Process):
         Elongate the new protein by the correct amino acid. Check if an
         MRNA is bound and if ribosome can move to next codon.
         Terminate if the ribosome reaches a STOP codon.
+
         @type return: Protein or False
         """
 
-        for i, ribosome in enumerate(mrna.binding):
-            if isinstance(ribosome, molecules.Protein):
+        perm_list = npr.permutation(range(len(mrna.binding)))
+        for i in perm_list:
+            bound_at_i = mrna.binding[i]
+
+            if isinstance(bound_at_i, molecules.Protein):
                 codon = mrna[i*3:i*3+3]
                 aa = self.code[codon]
                 if aa == "*":  # terminate at stop codon
@@ -112,15 +123,27 @@ class Translation(Process):
                     mrna.binding[i] = 0
         return 0
 
+
+        # TODO: this needs to update in a random order
+       
+
     def terminate(self, mrna, i):
         """
         Splits the ribosome/MRNA complex and returns a protein.
+
         @type mrna: MRNA
         """
-
         protein = mrna.binding[i]  # bound mRNA
-        mrna.binding[i] = 0
+        mrna.binding[i] = 0 #ungebunden
         self.__ribosomes.count += 1
-        print "{1} length: {0}.".format(len(protein.sequence),protein.sequence)
-        print 
+        print protein.sequence
+        print self.energy(protein.sequence)
         return protein
+    
+    def energy(self, value):
+        atp = len(value)
+        gtp = 4*len(value)
+        print '{0} ATP und {1} GTP wurden verbraucht.'.format(atp,gtp)
+        return (atp, gtp)
+
+    

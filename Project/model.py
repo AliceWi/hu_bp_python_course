@@ -14,7 +14,7 @@ class Model(object):
         # initiate states
         self.ribosomes = {'Ribosomes': mol.Ribosome('Ribosomes', 'Ribosomes', 1)}
         mrna_list = ["AUGGUACGUUUCUAG", "AUGGUACGUUUUUAG", "AUGUUUCGUUUCUAG", sample_seq]
-        print len(mrna_list)
+        print "Es wurden {0} mRNA Molekuele erkannt.".format(len(mrna_list))
         self.mrnas = {'MRNA_{0}'.format(i): mol.MRNA(i, 'MRNA_{0}'.format(i), mrna_list[i]) for i in xrange(len(mrna_list))}
 
         self.states.update(self.ribosomes)
