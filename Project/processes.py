@@ -7,25 +7,23 @@ class Process(object):
     """
     Parent for all cellular processes.
     """
-    def __init__(self, id, name): #Konstruktor
+    def __init__(self, id, name):
         self.id = id
         self.name = name
 
 
-        self.enzyme_ids = [] 
+        self.enzyme_ids = []
         self.substrate_ids = []
 
-    def set_states(self, substrate_ids, enzyme_ids): # mRNA, Ribosom
-        self.enzyme_ids = enzyme_ids # auch leere Liste
+    def set_states(self, substrate_ids, enzyme_ids):
+        self.enzyme_ids = enzyme_ids
         self.substrate_ids = substrate_ids
 
     def update(self, model):
         """
         Has to be implemented by child class.
         """
-        pass # = mach nichts
-        #Defaultfunktion
-        #weil andere Klassen auch die FUnk miterben
+        pass
 
 
 class Translation(Process):
@@ -53,29 +51,25 @@ class Translation(Process):
                  ('GGA', 'G'), ('GGG', 'G'), ('GGC', 'G'), ('GGU', 'G')])
 
     def __init__(self, id, name):
-        super(Translation, self).__init__(id, name) # ohne super keine Attribute, aber Funktionen 
+        super(Translation, self).__init__(id, name)
 
         # declare attributes
         self.__ribsomes = []
 
-    def update(self, model): # von model, saemtliche modelobjekte
+    def update(self, model):
         """
         Update all mrnas and translate proteins.
         """
-<<<<<<< HEAD
-        self.__ribosomes = model.states[self.enzyme_ids[0]] # gibt Ribosomobjekt von enzyme aus model 
-=======
 
         self.__ribosomes = model.states[self.enzyme_ids[0]]
->>>>>>> 0f27e3db073d85a2cf1634b562b739f20cd38395
         for mrna_id in self.substrate_ids:
             prot = None
             mrna = model.states[mrna_id]
-            if not mrna.binding[0]: # wenns 0 ist, Abfrage richtig, geht rein
+            if not mrna.binding[0]:
                 self.initiate(mrna)
             else:
                 prot = self.elongate(mrna)
-            if isinstance(prot, molecules.Protein): # Typabfrage
+            if isinstance(prot, molecules.Protein):
                 if prot.id in model.states:
                     model.states[prot.id].append(prot)
                 else:
@@ -113,9 +107,9 @@ class Translation(Process):
                     return self.terminate(mrna, i)
 
                 if not mrna.binding[i + 1]:  # if the next rna position is free
-                    mrna.binding[i] + aa # setze auf diese Stelle aa
-                    mrna.binding[i + 1] = mrna.binding[i] # die naechste Stelle wird die betrachtete
-                    mrna.binding[i] = 0 # und die betrachtete Stelle ist 0
+                    mrna.binding[i] + aa
+                    mrna.binding[i + 1] = mrna.binding[i]
+                    mrna.binding[i] = 0
         return 0
 
     def terminate(self, mrna, i):
@@ -125,7 +119,7 @@ class Translation(Process):
         """
 
         protein = mrna.binding[i]  # bound mRNA
-        mrna.binding[i] = 0 #ungebunden
+        mrna.binding[i] = 0
         self.__ribosomes.count += 1
         print protein.sequence
         return protein
